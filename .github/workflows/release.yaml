@@ -1,12 +1,10 @@
 on:
   pull_request:
     branches:
-      - final
-      # - master
+      - master
   push:
     branches:
-      - final
-      # - master
+      - master
 env:
   PROPERTIES_PATH: "./android/key.properties"
 
