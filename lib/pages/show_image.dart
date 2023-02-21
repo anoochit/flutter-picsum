@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:picsum/models/picsum.dart';
@@ -30,6 +32,7 @@ class _ShowImageState extends State<ShowImage> {
         icon: Icon(Icons.download),
         onPressed: () {
           // save to gallery
+          // log(data.downloadUrl);
           PicsumService.saveNetworkImage(
               name: 'picsum_' + data.id + ".png", url: data.downloadUrl);
         },
