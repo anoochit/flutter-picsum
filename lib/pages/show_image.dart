@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:picsum/models/picsum.dart';
@@ -16,8 +15,7 @@ class _ShowImageState extends State<ShowImage> {
 
   @override
   Widget build(BuildContext context) {
-    final scWidth = context.width.toInt();
-    final scHeight = context.height.toInt();
+    final scHeight = context.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(

@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final scWidth = MediaQuery.of(context).size.width;
+    final scWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
       appBar: AppBar(
         title: Text("Picsum"),
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
       body: (data!.length != 0)
           ? LazyLoadScrollView(
               onEndOfPage: () => loadMore(),
-              scrollOffset: (MediaQuery.of(context).size.height * 0.6).toInt(),
+              scrollOffset: (MediaQuery.sizeOf(context).height * 0.6).toInt(),
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount:
@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> {
                       child: GridTile(
                         child: PicsumService.getSmallImage(
                           id: data![index].id,
-                          height: scWidth.toInt(),
-                          width: scWidth.toInt(),
+                          height: scWidth,
+                          width: scWidth,
                         ),
                         footer: Padding(
                           padding: const EdgeInsets.all(8.0),

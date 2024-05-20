@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -14,33 +15,59 @@ class PicsumService {
 
   static Future<List<Picsum>?> getImagePage(
       {int page = 1, int total = 20}) async {
+    final url = 'https://picsum.photos/v2/list?page=${page}&limit${total}';
     try {
-      // get images from picsun
-      final res = await http.get(Uri.parse(
-          'https://picsum.photos/v2/list?page=${page}&limit${total}'));
-      if (res.statusCode == 200) {
-        // return parsed data
-        final picsum = picsumFromJson(res.body);
-        //log('${res.body}');
+      final key = '${page}_${total}';
+
+      // check local cache
+      final fileInfo = await DefaultCacheManager().getFileFromCache(key);
+
+      if (fileInfo == null) {
+        // no cache found load from api
+        log('no cache found load from api');
+        final file = await DefaultCacheManager().getSingleFile(url, key: key);
+        final jsonString = await file.readAsString();
+        final picsum = picsumFromJson(jsonString);
         return picsum;
       } else {
-        return null;
+        // found cache
+        log('found cache load from file');
+        final jsonString = await fileInfo.file.readAsString();
+        final picsum = picsumFromJson(jsonString);
+        return picsum;
       }
+
+      // // get images from picsun
+      // final res = await http.get(Uri.parse());
+      // if (res.statusCode == 200) {
+      //   // return parsed data
+      //   final picsum = picsumFromJson(res.body);
+      //   //log('${res.body}');
+      //   return picsum;
+      // } else {
+      //   return null;
+      // }
     } catch (e) {
       return null;
     }
   }
 
   static getSmallImage(
-      {required String id, required int width, required int height}) {
+      {required String id, required double width, required double height}) {
     // https://picsum.photos/id/237/200/300
 
     return CachedNetworkImage(
-      imageUrl: 'https://picsum.photos/id/$id/$width/$height',
+      imageUrl: 'https://picsum.photos/id/$id/${width.ceil()}/${height.ceil()}',
+      cacheKey: 'picsum$id',
+      errorWidget: (context, url, error) => Container(
+        width: width,
+        height: height,
+        color: Colors.grey,
+      ),
       placeholder: (context, url) {
         return Container(
-          width: width.toDouble(),
-          height: height.toDouble(),
+          width: width,
+          height: height,
           color: Colors.grey,
           child: Center(
             child: CircularProgressIndicator(),
