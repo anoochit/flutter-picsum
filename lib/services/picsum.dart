@@ -1,12 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:gallery_saver/gallery_saver.dart';
+// import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:picsum/models/picsum.dart';
 
@@ -78,6 +80,9 @@ class PicsumService {
   }
 
   static saveNetworkImage({required String url, required String name}) async {
+    Get.snackbar('Info',
+        'Downloading… You’ll be notified once the download is complete.');
+
     final res = await http.get(Uri.parse(url));
 
     final tempDir = await getTemporaryDirectory();
@@ -85,17 +90,25 @@ class PicsumService {
     final f = File(tempName);
     f.writeAsBytesSync(res.bodyBytes);
 
-    await GallerySaver.saveImage(f.path).then(
-      (value) {
-        log(f.path);
-        Get.snackbar(
-          'Saved',
-          'Save image to gallery',
-          duration: Duration(
-            seconds: 1,
-          ),
-        );
-      },
+    await ImageGallerySaverPlus.saveImage(
+      Uint8List.fromList(res.bodyBytes),
+      name: tempName,
     );
+
+    Get.snackbar('Info', 'Your image has been saved to the gallery!');
+
+    // TODO : save image to gallery
+    // await GallerySaver.saveImage(f.path).then(
+    //   (value) {
+    //     log(f.path);
+    //     Get.snackbar(
+    //       'Saved',
+    //       'Save image to gallery',
+    //       duration: Duration(
+    //         seconds: 1,
+    //       ),
+    //     );
+    //   },
+    // );
   }
 }
