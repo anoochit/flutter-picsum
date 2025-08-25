@@ -46,7 +46,7 @@ android {
             keyAlias = keystoreProperties["keyAlias"] as String
             keyPassword = keystoreProperties["keyPassword"] as String
             //storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storeFile = file('key.jks')
+            storeFile = file("key.jks")
             storePassword = keystoreProperties["storePassword"] as String
         }
     }
