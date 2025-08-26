@@ -7,7 +7,6 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
