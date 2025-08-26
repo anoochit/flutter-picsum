@@ -64,10 +64,6 @@ jobs:
       #     cd ..
       #     zip -r app.ipa Payload
 
-      # Extract version and set tag
-      - name: Extract version from pubspec.yaml
-        run: echo "APP_VERSION=$(grep 'version: ' pubspec.yaml | sed 's/version: //')" >> $GITHUB_ENV
-
       # Release artifacts
       - name: Push to GitHub Releases
         uses: ncipollo/release-action@v1
@@ -75,5 +71,5 @@ jobs:
           artifacts: |
             build/app/outputs/bundle/release/*.aab,
             build/app/outputs/flutter-apk/*.apk
-          tag: v${{ env.APP_VERSION }}
+          tag: v1.4.0+${{ github.run_number }}
           token: ${{ secrets.GITHUB_TOKEN }}
